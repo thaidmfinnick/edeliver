@@ -298,6 +298,15 @@ __remote() {
 
   __log "${_hosts} : $_remote_job"
 
+  if [ -t 0 ]; then
+    # echo "in a pipe false"
+    local _in_a_pipe="false"
+  else 
+    # echo "in a pipe true"
+    local _in_a_pipe="false"
+    # local _piped_data="$(</dev/stdin)"
+  fi
+
   for _host in $_hosts
   do
     ssh -o ConnectTimeout="$SSH_TIMEOUT" "$_host" "$_remote_job $SILENCE" &
