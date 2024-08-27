@@ -105,7 +105,7 @@ defmodule Edeliver do
     Prints the pending ecto migrations
   """
   def list_pending_migrations(application_name, application_version, ecto_repository \\ '') do
-    # warning "#{application_name} - #{application_version} - #{ecto_repository}"
+    warning "#{application_name} - #{application_version} - #{ecto_repository}"
     repository = ecto_repository!(application_name, ecto_repository)
     migrator = Ecto.Migrator
     versions = migrator.migrated_versions(repository)
@@ -143,15 +143,15 @@ defmodule Edeliver do
 
   defp ecto_repository!(_application_name, ecto_repository = [_|_] ) do
     # repository name was passed as ECTO_REPOSITORY env by the erlang-node-execute rpc call
-    List.to_atom ecto_repository
-    # ecto_repo = List.to_atom ecto_repository
-    # warning "nameee: #{ecto_repo}"
-    # ecto_repo
+    ecto_repo = List.to_atom ecto_repository
+    warning "nameee: #{ecto_repo}"
+    ecto_repo
   end
 
   defp ecto_repository!(application_name, _ecto_repository) do
     case System.get_env "ECTO_REPOSITORY" do # ECTO_REPOSITORY env was set when the node was started
       ecto_repository = <<_,_::binary>> ->
+        warning "has repo 1:#{ecto_repository}"
         ecto_repository_module = ecto_repository |> to_charlist |> List.to_atom
         if maybe_ecto_repo?(ecto_repository_module) do
           ecto_repository_module
@@ -160,9 +160,14 @@ defmodule Edeliver do
         end
       _ ->
         case ecto_repos_from_config(application_name) do
-          {:ok, [ecto_repository_module]} -> ecto_repository_module
-          {:ok, modules =[_|_]} -> error! "Found several ecto repository modules (#{inspect modules}).\n    Please specify the repository to use in the edeliver config as ECTO_REPOSITORY env."
+          {:ok, [ecto_repository_module]} ->
+            warning "has repo 222:#{ecto_repository_module}"
+            ecto_repository_module
+          {:ok, modules =[_|_]} ->
+            warning "has more than 1 repo:#{modules}"
+            error! "Found several ecto repository modules (#{inspect modules}).\n    Please specify the repository to use in the edeliver config as ECTO_REPOSITORY env."
           :error ->
+            warning "go hereee"
             case Enum.filter(:erlang.loaded |> Enum.reverse, &ecto_1_0_repo?/1) do
               [ecto_repository_module] -> ecto_repository_module
               [] -> error! "No ecto repository module found.\n    Please specify the repository in the edeliver config as ECTO_REPOSITORY env."
