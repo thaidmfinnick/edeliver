@@ -105,8 +105,7 @@ defmodule Edeliver do
     Prints the pending ecto migrations
   """
   def list_pending_migrations(application_name, application_version, ecto_repository \\ '') do
-    warning "#{application_name} - #{application_version} - #{ecto_repository}"
-
+    # warning "#{application_name} - #{application_version} - #{ecto_repository}"
     repository = ecto_repository!(application_name, ecto_repository)
     migrator = Ecto.Migrator
     versions = migrator.migrated_versions(repository)
@@ -144,9 +143,10 @@ defmodule Edeliver do
 
   defp ecto_repository!(_application_name, ecto_repository = [_|_] ) do
     # repository name was passed as ECTO_REPOSITORY env by the erlang-node-execute rpc call
-    ecto_repo = List.to_atom ecto_repository
-    warning "nameee: #{ecto_repo}"
-    ecto_repo
+    List.to_atom ecto_repository
+    # ecto_repo = List.to_atom ecto_repository
+    # warning "nameee: #{ecto_repo}"
+    # ecto_repo
   end
 
   defp ecto_repository!(application_name, _ecto_repository) do
