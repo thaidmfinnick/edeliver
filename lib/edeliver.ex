@@ -146,6 +146,7 @@ defmodule Edeliver do
     # repository name was passed as ECTO_REPOSITORY env by the erlang-node-execute rpc call
     ecto_repo = List.to_atom ecto_repository
     warning "nameee: #{ecto_repo}"
+    ecto_repo
   end
 
   defp ecto_repository!(application_name, _ecto_repository) do
