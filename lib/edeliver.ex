@@ -124,7 +124,8 @@ defmodule Edeliver do
   """
   def migrate(application_name, application_version, ecto_repository, direction, migration_version \\ :all) when is_atom(direction) do
     # migration_version need to be integer
-    options = if migration_version == :all, do: [all: true], else: [to: migration_version]
+    warning "===> #{application_name} - #{application_version}"
+    options = if migration_version == :all, do: [all: true], else: [to: String.to_integer(migration_version)]
     migrator = Ecto.Migrator
     repos = ecto_repository!(application_name, ecto_repository)
     Enum.each(repos, fn repository ->
