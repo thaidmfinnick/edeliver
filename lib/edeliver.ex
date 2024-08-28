@@ -114,7 +114,7 @@ defmodule Edeliver do
       |> Enum.reverse
       |> Enum.map(fn {version, name, _file} -> {version, name} end)
       pending_migrations |> Enum.each(fn {version, name} ->
-        warning "pending: #{name} (#{version})"
+        warning "pending: #{repository} #{name} (#{version})"
       end)
     end)
   end
