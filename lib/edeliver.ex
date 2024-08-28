@@ -123,7 +123,8 @@ defmodule Edeliver do
     Runs the pending ecto migrations
   """
   def migrate(application_name, application_version, ecto_repository, direction, migration_version \\ :all) when is_atom(direction) do
-    options = if migration_version == :all, do: [all: true], else: [to: to_string(migration_version)]
+    # migration_version need to be integer
+    options = if migration_version == :all, do: [all: true], else: [to: migration_version]
     migrator = Ecto.Migrator
     repos = ecto_repository!(application_name, ecto_repository)
     Enum.each(repos, fn repository ->
